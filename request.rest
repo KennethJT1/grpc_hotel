@@ -1,0 +1,40 @@
+### CREATE POST
+
+POST http://localhost:8080/api/users HTTP/1.1
+content-type: application/json
+
+{
+    "email": "Admin0i@gmail.com",
+    "name": "admin",
+    # "role": "ADMIN",
+    "password": "ReactJS",
+    "passwordConfirm": "ReactJS"
+    
+}
+
+
+### UPDATE POST
+
+PATCH http://localhost:8080/api/users/ HTTP/1.1
+content-type: application/json
+
+{
+    "title": "My re-edit post content",
+    "content": "I love this react course that i edited",
+    "category": "React_JS",
+    "published": false,
+    "image": "default.png"
+}
+
+### SINGLE POST
+
+GET http://localhost:8080/api/users/ HTTP/1.1
+
+### DELETE A POST 
+DELETE http://localhost:8080/api/users/ HTTP/1.1
+
+### GET ALL users
+
+GET http://localhost:8080/api/users?page=1&limit=5 HTTP/1.1
+
+ 

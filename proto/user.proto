@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package auth;
+
+import "google/protobuf/timestamp.proto";
+
+enum Role {
+  USER = 0;
+  ADMIN = 1;
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string password = 3;
+  string name = 4;
+  Role role = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+message UserResponse { User user = 1; }
+
+message GenericResponse {
+  string status = 1;
+  string message = 2;
+}

@@ -1,0 +1,59 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id String @id @default(uuid())
+  email     String   @unique
+  password  String   
+  name      String
+  role      Role     @default(USER)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map(name: "users")
+}
+
+model Hotel {
+  id               String  @id @default(uuid())
+  name             String  
+  maxcount         Int     
+  phonenumber      Int
+  rentperday       Int
+  imageurls        String[]
+  currentbookings  String[]
+  type             String
+  description      String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map(name: "hotels")
+}
+
+model Booking {
+  id             String  @id @default(uuid())
+  room           String
+  roomid         String
+  userid         String
+  fromdate       String
+  todate         String
+  totalamount    Int
+  totaldays      Int
+  transactionid  String
+  status         String  @default("booked")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map(name: "bookings")
+}
+
+
+enum Role {
+  USER
+  ADMIN
+}
