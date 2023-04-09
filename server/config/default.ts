@@ -12,13 +12,13 @@ const customConfig: {
   refreshTokenPrivateKey: string;
   refreshTokenPublicKey: string;
   redisCacheExpiresIn: number;
-  CLIENT_PORT: string
+  CLIENT_PORT: string;
 } = {
   // port: process.env.SEREVER_PORT as string,
-  port:8900,
-  accessTokenExpiresIn: 15,
-  refreshTokenExpiresIn: 60,
-  redisCacheExpiresIn: 60,
+  port: 8900,
+  accessTokenExpiresIn: 150000000000,
+  refreshTokenExpiresIn: 600000000000,
+  redisCacheExpiresIn: 60000000000000,
 
   dbUri: process.env.DATABASE_URL as string,
   CLIENT_PORT: process.env.CLIENT_PORT as string,

@@ -9,6 +9,7 @@ message SignUpUserInput {
   string email = 2;
   string password = 3;
   string passwordConfirm = 4;
+  string role = 5;
 }
 
 message SignUpUserResponse { User user = 1; }

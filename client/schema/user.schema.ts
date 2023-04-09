@@ -1,18 +1,29 @@
 import { z } from 'zod';
 
-export const createUserSchema = z.object({
+export const signupSchema = z.object({
   body: z.object({
     email: z.string({
-      required_error: 'Email is required',
+      required_error: "Email is required",
     }),
     name: z.string({
-      required_error: 'Name is required',
+      required_error: "Name is required",
     }),
     password: z.string({
-      required_error: 'Password is required',
+      required_error: "Password is required",
     }),
     passwordConfirm: z.string({
-      required_error: 'PasswordConfirm is required',
+      required_error: "PasswordConfirm is required",
+    }),
+  }),
+});
+
+export const signinSchema = z.object({
+  body: z.object({
+    email: z.string({
+      required_error: "Email is required",
+    }),
+    password: z.string({
+      required_error: "Password is required",
     }),
   }),
 });
@@ -44,7 +55,7 @@ export const deleteUserSchema = z.object({
   ...params,
 });
 
-export type CreateUserInput = z.TypeOf<typeof createUserSchema>['body'];
-export type GetUserInput = z.TypeOf<typeof getUserSchema>['params'];
-export type UpdateUserInput = z.TypeOf<typeof updateUserSchema>;
+export type SignupInput = z.TypeOf<typeof signupSchema>["body"];
+export type SigninInput = z.TypeOf<typeof signinSchema>["body"];
+export type GetUserInput = z.TypeOf<typeof getUserSchema>["params"];
 export type DeleteUserInput = z.TypeOf<typeof deleteUserSchema>['params'];

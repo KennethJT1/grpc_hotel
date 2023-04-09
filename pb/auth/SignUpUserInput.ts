@@ -6,6 +6,7 @@ export interface SignUpUserInput {
   'email'?: (string);
   'password'?: (string);
   'passwordConfirm'?: (string);
+  'role'?: (string);
 }
 
 export interface SignUpUserInput__Output {
@@ -13,4 +14,5 @@ export interface SignUpUserInput__Output {
   'email': (string);
   'password': (string);
   'passwordConfirm': (string);
+  'role': (string);
 }

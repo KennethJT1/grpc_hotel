@@ -6,6 +6,11 @@ import "user.proto";
 import "rpc_signup_user.proto";
 import "rpc_signin_user.proto";
 
+import "hotel.proto";
+import "rpc_create_hotel.proto";
+import "rpc_update_hotel.proto";
+
+//User service
 service AuthService {
   rpc SignUpUser(SignUpUserInput) returns (SignUpUserResponse) {}
   rpc SignInUser(SignInUserInput) returns (SignInUserResponse) {}
@@ -19,3 +24,22 @@ message RefreshTokenResponse {
   string access_token = 1;
   string refresh_token = 2;
 }
+
+// Hotel Service
+service HotelService {
+  rpc DeleteHotel(HotelRequest) returns (DeleteHotelResponse) {}
+  rpc GetHotel(HotelRequest) returns (HotelResponse) {}
+  rpc GetHotels(GetHotelsRequest) returns (stream Hotel) {}
+  rpc CreateHotel(CreateHotelRequest) returns (HotelResponse) {}
+  rpc UpdateHotel(UpdateHotelRequest) returns (HotelResponse) {}
+  
+}
+
+message GetHotelsRequest {
+  int64 page = 1;
+  int64 limit = 2;
+}
+
+message HotelRequest { string id = 1; }
+
+message DeleteHotelResponse { bool success = 1; }

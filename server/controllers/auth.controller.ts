@@ -15,6 +15,9 @@ import { RefreshTokenResponse } from '../../pb/auth/RefreshTokenResponse';
 import { signJwt, verifyJwt } from '../utils/jwt';
 import customConfig from '../config/default';
 import redisClient from '../utils/connectRedis';
+import { Role } from "../../pb/auth/Role";
+
+let role: Role | undefined;
 
 export const registerHandler = async (
   req: grpc.ServerUnaryCall<SignUpUserInput__Output, SignUpUserResponse>,
@@ -26,7 +29,6 @@ export const registerHandler = async (
       email: req.request.email.toLowerCase(),
       name: req.request.name,
       password: hashedPassword,
-      role?: req.request.role
     });
 
     res(null, {
@@ -44,10 +46,10 @@ export const registerHandler = async (
       },
     });
   } catch (err: any) {
-    if (err.code === 'P2002') {
+    if (err.code === "P2002") {
       res({
         code: grpc.status.ALREADY_EXISTS,
-        message: 'Email already exists',
+        message: "Email already exists",
       });
     }
     res({ code: grpc.status.INTERNAL, message: err.message });
@@ -66,10 +68,24 @@ export const loginHandler = async (
     const user = await findUser({ email: req.request.email });
 
     // Check if user exist and password is correct
-    if (!user || !(await bcrypt.compare(req.request.password, user.password))) {
+    // if (!user || !(await bcrypt.compare(req.request.password, user.password))) {
+    //   res({
+    //     code: grpc.status.INVALID_ARGUMENT,
+    //     message: 'Invalid email or password',
+    //   });
+    // }
+
+    if (!user) {
       res({
         code: grpc.status.INVALID_ARGUMENT,
-        message: 'Invalid email or password',
+        message: "Invalid email",
+      });
+    }
+
+    if (!(await bcrypt.compare(req.request.password, user.password))) {
+      res({
+        code: grpc.status.INVALID_ARGUMENT,
+        message: "Invalid  password",
       });
     }
 
@@ -78,7 +94,7 @@ export const loginHandler = async (
 
     // Send Access Token
     res(null, {
-      status: 'success',
+      status: "success",
       access_token,
       refresh_token,
     });
