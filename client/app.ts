@@ -19,6 +19,11 @@ import {
   createHotelSchema,
   updateHotelSchema,
 } from "./schema/hotel.schema";
+import {
+  CreateBookingInput,
+  GetBookingInput,
+  createBookingSchema,
+} from "./schema/booking.schema";
 
 //USER
 const client = new proto.auth.AuthService(
@@ -56,6 +61,25 @@ client_hotel.waitForReady(deadline_hotel, (err: any) => {
 
 function onClientReadyHotel() {
   console.log("🚀 gRPC Hotel Client is ready");
+}
+
+//Booking
+const client_booking = new proto.auth.BookingService(
+  `0.0.0.0:${customConfig.port}`,
+  grpc.credentials.createInsecure()
+);
+const deadline_booking = new Date();
+deadline_booking.setSeconds(deadline_booking.getSeconds() + 1);
+client_booking.waitForReady(deadline_booking, (err: any) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  onClientReadyBooking();
+});
+
+function onClientReadyBooking() {
+  console.log("🚀 gRPC Booking Client is ready");
 }
 
 const app = express();
@@ -213,7 +237,7 @@ app.post(
 //   })
 // })
 
-/* ========================================= USER ROUTES=================================================== */
+/* ========================================= Hotel ROUTES=================================================== */
 //cretae hotel
 app.post(
   "/api/hotels",
@@ -258,6 +282,7 @@ app.post(
   }
 );
 
+//update hotel
 app.patch(
   "/api/hotels/:hotelId",
   validate(updateHotelSchema),
@@ -305,6 +330,7 @@ app.patch(
   }
 );
 
+//get single hotel
 app.get(
   "/api/hotels/:hotelId",
   async (req: Request<GetHotelInput>, res: Response) => {
@@ -328,6 +354,7 @@ app.get(
   }
 );
 
+//delete an hotel
 app.delete(
   "/api/hotels/:hotelId",
   async (req: Request<DeleteHotelInput>, res: Response) => {
@@ -351,6 +378,7 @@ app.delete(
   }
 );
 
+//Get all hotels
 app.get("/api/hotels", async (req: Request, res: Response) => {
   const limit = parseInt(req.query.limit as string) || 10;
   const page = parseInt(req.query.page as string) || 1;
@@ -377,6 +405,129 @@ app.get("/api/hotels", async (req: Request, res: Response) => {
     });
   });
 });
+
+/* ========================================= USER ROUTES=================================================== */
+
+//Book a room
+app.post(
+  "/api/bookings",
+  validate(createBookingSchema),
+  async (req: Request<{}, {}, CreateBookingInput>, res: Response) => {
+    const {
+      status,
+      room,
+      roomid,
+      userid,
+      fromdate,
+      todate,
+      totalamount,
+      totaldays,
+      transactionid,
+    } = req.body;
+    client_booking.CreateBooking(
+      {
+        status,
+        room,
+        roomid,
+        userid,
+        fromdate,
+        todate,
+        totalamount,
+        totaldays,
+        transactionid,
+      },
+      (err, data) => {
+        if (err) {
+          return res.status(400).json({
+            status: "fail",
+            message: err.message,
+          });
+        }
+        return res.status(201).json({
+          status: "success",
+          hotel: data,
+        });
+      }
+    );
+  }
+);
+
+//Get a booked room by id
+app.get(
+  "/api/hotels/bookingId",
+  async (req: Request<GetBookingInput>, res: Response) => {
+    client_booking.GetBooking(
+      {
+        id: req.params.bookingId,
+      },
+      (err, data) => {
+        if (err) {
+          return res.status(400).json({
+            status: "fail",
+            message: err.message,
+          });
+        }
+        return res.status(200).json({
+          status: "success",
+          hotel: data,
+        });
+      }
+    );
+  }
+);
+
+//cancel abooked room
+// app.delete(
+//   "/api/bookings/:bookingId",
+//   async (req: Request<CancelBookingInput>, res: Response) => {
+//     client_booking.CancelBooking(
+//       {
+//         id: req.params.bookingId,
+//       },
+//       (err, data) => {
+//         if (err) {
+//           return res.status(400).json({
+//             status: "fail",
+//             message: err.message,
+//           });
+//         }
+//         return res.status(204).json({
+//           status: "success",
+//           data: null,
+//         });
+//       }
+//     );
+//   }
+// );
+
+// get all booked room
+app.get("/api/bookings", async (req: Request, res: Response) => {
+  const limit = parseInt(req.query.limit as string) || 10;
+  const page = parseInt(req.query.page as string) || 1;
+  const hotels: Hotel[] = [];
+
+  const stream = client_booking.GetBookings({ page, limit });
+  stream.on("data", (data: Hotel) => {
+    hotels.push(data);
+  });
+
+  stream.on("end", () => {
+    console.log("🙌 Communication ended");
+    res.status(200).json({
+      status: "success",
+      results: hotels.length,
+      hotels,
+    });
+  });
+
+  stream.on("error", (err) => {
+    res.status(500).json({
+      status: "error",
+      message: err.message,
+    });
+  });
+});
+
 
 const port = 8080
 app.listen(port, ()=>{

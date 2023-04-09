@@ -44,16 +44,6 @@ export const createHotelSchema = z.object({
   }),
 });
 
-//to validate the createhotelhandler
-export const isValidCreateHotelRequest = (reqBody: unknown): boolean => {
-  try {
-    createHotelSchema.parse(reqBody);
-    return true;
-  } catch (err) {
-    return false;
-  }
-};
-
 const params = {
   params: z.object({
     hotelId: z.string(),

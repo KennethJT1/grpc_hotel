@@ -74,24 +74,24 @@ export const loginHandler = async (
     //     message: 'Invalid email or password',
     //   });
     // }
-
-    if (!user) {
-      res({
-        code: grpc.status.INVALID_ARGUMENT,
-        message: "Invalid email",
-      });
-    }
-
-    if (!(await bcrypt.compare(req.request.password, user.password))) {
-      res({
-        code: grpc.status.INVALID_ARGUMENT,
-        message: "Invalid  password",
-      });
-    }
-
-    // Create the Access and refresh Tokens
-    const { access_token, refresh_token } = await signTokens(user);
-
+console.log("111111111111111111111111111");
+if (!user) {
+  res({
+    code: grpc.status.INVALID_ARGUMENT,
+    message: "Invalid email",
+  });
+}
+console.log("22222222222222211111111111");
+if (!(await bcrypt.compare(req.request.password, user.password))) {
+  res({
+    code: grpc.status.INVALID_ARGUMENT,
+    message: "Invalid  password",
+  });
+}
+console.log("333333333333333331111111111111");
+// Create the Access and refresh Tokens
+const { access_token, refresh_token } = await signTokens(user);
+console.log("44444444444444444111111111111111");
     // Send Access Token
     res(null, {
       status: "success",

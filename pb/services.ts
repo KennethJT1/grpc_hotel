@@ -2,6 +2,7 @@ import type * as grpc from '@grpc/grpc-js';
 import type { EnumTypeDefinition, MessageTypeDefinition } from '@grpc/proto-loader';
 
 import type { AuthServiceClient as _auth_AuthServiceClient, AuthServiceDefinition as _auth_AuthServiceDefinition } from './auth/AuthService';
+import type { BookingServiceClient as _auth_BookingServiceClient, BookingServiceDefinition as _auth_BookingServiceDefinition } from './auth/BookingService';
 import type { HotelServiceClient as _auth_HotelServiceClient, HotelServiceDefinition as _auth_HotelServiceDefinition } from './auth/HotelService';
 
 type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> = {
@@ -11,8 +12,12 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 export interface ProtoGrpcType {
   auth: {
     AuthService: SubtypeConstructor<typeof grpc.Client, _auth_AuthServiceClient> & { service: _auth_AuthServiceDefinition }
+    BookingRequest: MessageTypeDefinition
+    BookingService: SubtypeConstructor<typeof grpc.Client, _auth_BookingServiceClient> & { service: _auth_BookingServiceDefinition }
+    CancelBookingResponse: MessageTypeDefinition
     DeleteHotelResponse: MessageTypeDefinition
     GenericResponse: MessageTypeDefinition
+    GetBookingsRequest: MessageTypeDefinition
     GetHotelsRequest: MessageTypeDefinition
     GetMeInput: MessageTypeDefinition
     HotelRequest: MessageTypeDefinition
@@ -26,6 +31,11 @@ export interface ProtoGrpcType {
     SignUpUserResponse: MessageTypeDefinition
     User: MessageTypeDefinition
     UserResponse: MessageTypeDefinition
+  }
+  booking: {
+    Booking: MessageTypeDefinition
+    BookingResponse: MessageTypeDefinition
+    CreateBookingRequest: MessageTypeDefinition
   }
   google: {
     protobuf: {

@@ -19,6 +19,13 @@ import {
   findHotelHandler,
 } from "./controllers/hotel.controller";
 import { HotelServiceHandlers } from "../pb/auth/HotelService";
+import { BookingServiceHandlers } from "../pb/auth/BookingService";
+import {
+  cancelBookingHandler,
+  createBookingHandler,
+  findAllBookingsHandler,
+  findBookingHandler,
+} from "./controllers/booking.controller";
 
 const options: protoLoader.Options = {
   keepCase: true,
@@ -59,6 +66,14 @@ server.addService(authPackage.HotelService.service, {
   GetHotel: (req, res) => findHotelHandler(req, res),
   GetHotels: (call) => findAllHotelsHandler(call),
 } as HotelServiceHandlers);
+
+//Booking service
+server.addService(authPackage.BookingService.service, {
+  CreateBooking: (req, res) => createBookingHandler(req, res),
+  CancelBooking: (req, res) => cancelBookingHandler(req, res),
+  GetBooking: (req, res) => findBookingHandler(req, res),
+  GetBookings: (call) => findAllBookingsHandler(call),
+} as BookingServiceHandlers);
 
 
 server.bindAsync(

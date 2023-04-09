@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package booking;
+
+import "google/protobuf/timestamp.proto";
+
+message Booking {
+  string id = 1;
+  string room = 2;
+  string roomid = 3;
+  string userid = 4;
+  string fromdate = 5;
+  string todate = 6;
+  int32 totalamount = 7;
+  int32 totaldays = 8;
+  string transactionid = 9;
+  string status = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+
+message BookingResponse { Booking booking = 1; }

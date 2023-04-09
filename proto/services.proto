@@ -10,6 +10,9 @@ import "hotel.proto";
 import "rpc_create_hotel.proto";
 import "rpc_update_hotel.proto";
 
+import "booking.proto";
+import "rpc_create_booking.proto";
+
 //User service
 service AuthService {
   rpc SignUpUser(SignUpUserInput) returns (SignUpUserResponse) {}
@@ -43,3 +46,20 @@ message GetHotelsRequest {
 message HotelRequest { string id = 1; }
 
 message DeleteHotelResponse { bool success = 1; }
+
+//Booking Service
+service BookingService {
+  rpc CancelBooking(BookingRequest) returns (CancelBookingResponse) {}
+  rpc CreateBooking(CreateBookingRequest) returns (BookingResponse) {}
+  rpc GetBooking(BookingRequest) returns (BookingResponse) {}
+  rpc GetBookings(GetBookingsRequest) returns (stream Booking) {} 
+}
+
+message GetBookingsRequest {
+  int64 page = 1;
+  int64 limit = 2;
+}
+
+message BookingRequest { string id = 1; }
+
+message CancelBookingResponse { bool success = 1; }
