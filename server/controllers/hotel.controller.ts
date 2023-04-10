@@ -4,6 +4,7 @@ import {
   deleteHotel,
   findAllHotels,
   findHotel,
+  findHotelByLocation,
   findUniqueHotel,
   updateHotel,
 } from "../services/hotel.service";
@@ -14,6 +15,7 @@ import { HotelRequest__Output } from "../../pb/auth/HotelRequest";
 import { DeleteHotelResponse } from "../../pb/auth/DeleteHotelResponse";
 import { GetHotelsRequest__Output } from "../../pb/auth/GetHotelsRequest";
 import { Hotel } from "../../pb/hotel/Hotel";
+import { FindHotelsByLocationRequest__Output } from "../../pb/auth/FindHotelsByLocationRequest";
 
 export const createHotelHandler = async (
   req: grpc.ServerUnaryCall<CreateHotelRequest__Output, HotelResponse>,
@@ -155,6 +157,7 @@ export const findHotelHandler = async (
         currentbookings: hotel.currentbookings,
         type: hotel.type,
         description: hotel.description,
+        location: hotel.location,
         created_at: {
           seconds: hotel.createdAt.getTime() / 1000,
         },
@@ -229,6 +232,7 @@ export const findAllHotelsHandler = async (
         currentbookings: hotel.currentbookings,
         type: hotel.type,
         description: hotel.description,
+        location: hotel.location,
         created_at: {
           seconds: hotel.createdAt.getTime() / 1000,
         },
@@ -242,3 +246,42 @@ export const findAllHotelsHandler = async (
     console.log(error);
   }
 };
+
+export const findHotelsByLocationHandler = async (
+  call: grpc.ServerWritableStream<FindHotelsByLocationRequest__Output, Hotel>
+) => {
+  try {
+    const { page, limit, location } = call.request;
+    const hotels = await findHotelByLocation({
+      page: parseInt(page),
+      limit: parseInt(limit),
+      location,
+    });
+
+    for (let i = 0; i < hotels.length; i++) {
+      const hotel = hotels[i];
+      call.write({
+        id: hotel.id,
+        name: hotel.name,
+        maxcount: hotel.maxcount,
+        phonenumber: hotel.phonenumber,
+        rentperday: hotel.rentperday,
+        imageurls: hotel.imageurls,
+        currentbookings: hotel.currentbookings,
+        type: hotel.type,
+        description: hotel.description,
+        location: hotel.location,
+        created_at: {
+          seconds: hotel.createdAt.getTime() / 1000,
+        },
+        updated_at: {
+          seconds: hotel.updatedAt.getTime() / 1000,
+        },
+      });
+    }
+    call.end();
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+  

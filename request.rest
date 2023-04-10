@@ -42,7 +42,7 @@ POST http://localhost:8080/api/hotels HTTP/1.1
 content-type: application/json
 
 {
-  "name": "Bidemi hotel",
+  "name": "J2 finest hotel",
     "imageurls": [
       "https://imgcy.trivago.com/c_limit,d_dummy.jpeg,f_auto,h_650,q_auto,w_1000/itemimages/44/87/44878_v3.jpeg",
       "https://media-cdn.tripadvisor.com/media/photo-s/10/77/57/9e/laudon.jpg"
@@ -53,7 +53,7 @@ content-type: application/json
     "phonenumber": 6875357,
     "currentbookings": [],
     "description": "Stella hotel is located in Gaa-Kanbi Kwara state",
-    "location": "Lagos"
+    "location": "Jigawa"
 }
 
 
@@ -79,7 +79,7 @@ content-type: application/json
 
 ### SINGLE HOTEL
 
-GET http://localhost:8080/api/hotels/ HTTP/1.1
+GET http://localhost:8080/api/hotels/4544a62f-a846-4fba-97a9-a8176c2dac9c HTTP/1.1
 
 ### DELETE A HOTEL 
 DELETE http://localhost:8080/api/hotels/ HTTP/1.1
@@ -89,34 +89,9 @@ DELETE http://localhost:8080/api/hotels/ HTTP/1.1
 GET http://localhost:8080/api/hotels?page=1&limit=20 HTTP/1.1
 
 
+### GET ALL HOTEL BY LOCATION
 
-##################################HH################################################## BOOKING
-### CREATE BOOKING
-
-POST http://localhost:8080/api/bookings HTTP/1.1
-content-type: application/json
-
-{
-        "room": "tryied this",
-        "roomid": "6b9eb586-a5e6-4ca2-83ea-378d5bd888ab",
-        "userid": "1c8fdca4-a1ef-4e62-9ed8-93fe8efb730d",
-        "fromdate": "10-6-45",
-        "todate": "12-6-45",
-        "totalamount": 6500,
-        "totaldays": 5,
-        "transactionid": "12345"
-}
-
-### SINGLE BOOKING
-
-GET http://localhost:8080/api/bookings/ba10d643-2af8-4374-910e-c078d86cfe95 HTTP/1.1
-
-### CANCEL A BOOKING 
-DELETE http://localhost:8080/api/bookings/ HTTP/1.1
-
-### GET ALL BOOKING
-
-GET http://localhost:8080/api/bookings?page=1&limit=20 HTTP/1.1
+GET http://localhost:8080/api/hotels_location?location=Kano HTTP/1.1
 
  
 

@@ -2,12 +2,14 @@
 
 import type { Long } from '@grpc/proto-loader';
 
-export interface GetBookingsRequest {
+export interface FindHotelsByLocationRequest {
   'page'?: (number | string | Long);
   'limit'?: (number | string | Long);
+  'location'?: (string);
 }
 
-export interface GetBookingsRequest__Output {
+export interface FindHotelsByLocationRequest__Output {
   'page': (string);
   'limit': (string);
+  'location': (string);
 }

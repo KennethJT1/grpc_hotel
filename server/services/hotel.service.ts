@@ -17,6 +17,29 @@ export const findHotel = async (
   })) as Hotel;
 };
 
+export const findHotelByLocation = async ({
+  page,
+  limit,
+  select,
+  location,
+}: {
+  page: number;
+  limit: number;
+  select?: Prisma.HotelSelect;
+  location: string;
+}) => {
+  const take = limit || 10;
+  const skip = (page - 1) * limit;
+  return (await prisma.hotel.findMany({
+    select,
+    skip,
+    take,
+    where: {
+      location,
+    },
+  })) as Hotel[];
+};
+
 export const findUniqueHotel = async (
   where: Prisma.HotelWhereUniqueInput,
   select?: Prisma.HotelSelect
