@@ -10,7 +10,7 @@ import {
   signinSchema,
   signupSchema,
 } from "./schema/user.schema";
-import { Hotel, User } from "@prisma/client";
+import { Booking, Hotel, User } from "@prisma/client";
 import {
   CreateHotelInput,
   DeleteHotelInput,
@@ -143,100 +143,6 @@ app.post(
   }
 );
 
-// app.patch("/api/posts/:postId", validate(updatePostSchema), async (req: Request<UpdatePostInput['params'],{},UpdatePostInput['body']>, res: Response)=>{
-// const {title,image,category,content,published} = req.body
-//   client.UpdatePost(
-//     {
-//       id: req.params.postId,
-//       title,
-//       content,
-//       category,
-//       image,
-//       published
-//     },
-//     (err, data) => {
-//       if (err) {
-//         return res.status(400).json({
-//           status: "fail",
-//           message: err.message
-//         })
-//       }
-//       return res.status(200).json({
-//           status: "success",
-//           post: data?.post
-//         })
-//     }
-//   );
-// })
-
-// app.get("/api/posts/:postId", async (req: Request<GetPostInput>, res: Response)=>{
-//   client.GetPost(
-//     {
-//       id: req.params.postId,
-//     },
-//     (err, data) => {
-//       if (err) {
-//         return res.status(400).json({
-//           status: "fail",
-//           message: err.message
-//         })
-//       }
-//       return res.status(200).json({
-//           status: "success",
-//           post: data?.post
-//         })
-//     }
-//   );
-// })
-
-// app.delete("/api/posts/:postId", async (req: Request<DeletePostInput>, res: Response)=>{
-//   client.DeletePost(
-//     {
-//       id: req.params.postId,
-//     },
-//     (err, data) => {
-//       if (err) {
-//         return res.status(400).json({
-//           status: "fail",
-//           message: err.message
-//         })
-//       }
-//       return res.status(204).json({
-//           status: "success",
-//           data: null
-//         })
-//     }
-//   );
-// })
-
-// app.get("/api/posts", async (req: Request, res: Response)=>{
-//   const limit = parseInt(req.query.limit as string) || 10
-//   const page = parseInt(req.query.page as string) || 1
-//   const posts: Post[] = []
-
-//   const stream = client.GetPosts({page, limit})
-//   stream.on("data", (data: Post)=> {
-//     posts.push(data)
-//   })
-
-//   stream.on("end", ()=> {
-//     console.log("🙌 Communication ended")
-//     res.status(200).json({
-//           status: "success",
-//           results: posts.length,
-//           posts
-
-//         })
-//   })
-
-//   stream.on("error", (err)=> {
-//     res.status(500).json({
-//           status: "error",
-//           message: err.message
-//         })
-//   })
-// })
-
 /* ========================================= Hotel ROUTES=================================================== */
 //cretae hotel
 app.post(
@@ -347,7 +253,7 @@ app.get(
         }
         return res.status(200).json({
           status: "success",
-          hotel: data,
+          data,
         });
       }
     );
@@ -414,7 +320,6 @@ app.post(
   validate(createBookingSchema),
   async (req: Request<{}, {}, CreateBookingInput>, res: Response) => {
     const {
-      status,
       room,
       roomid,
       userid,
@@ -426,7 +331,6 @@ app.post(
     } = req.body;
     client_booking.CreateBooking(
       {
-        status,
         room,
         roomid,
         userid,
@@ -454,7 +358,7 @@ app.post(
 
 //Get a booked room by id
 app.get(
-  "/api/hotels/bookingId",
+  "/api/bookings/:bookingId",
   async (req: Request<GetBookingInput>, res: Response) => {
     client_booking.GetBooking(
       {
@@ -469,7 +373,7 @@ app.get(
         }
         return res.status(200).json({
           status: "success",
-          hotel: data,
+          data,
         });
       }
     );
@@ -504,19 +408,19 @@ app.get(
 app.get("/api/bookings", async (req: Request, res: Response) => {
   const limit = parseInt(req.query.limit as string) || 10;
   const page = parseInt(req.query.page as string) || 1;
-  const hotels: Hotel[] = [];
+  const bookings: Booking[] = [];
 
   const stream = client_booking.GetBookings({ page, limit });
-  stream.on("data", (data: Hotel) => {
-    hotels.push(data);
+  stream.on("data", (data: Booking) => {
+    bookings.push(data);
   });
 
   stream.on("end", () => {
     console.log("🙌 Communication ended");
     res.status(200).json({
       status: "success",
-      results: hotels.length,
-      hotels,
+      results: bookings.length,
+      bookings,
     });
   });
 

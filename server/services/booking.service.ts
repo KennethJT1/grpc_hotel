@@ -46,5 +46,5 @@ export const findAllBookings = async ({
 };
 
 export const cancelBooking = async (where: Prisma.HotelWhereUniqueInput) => {
-  return await prisma.hotel.delete({ where });
+  return await prisma.booking.delete({ where });
 };

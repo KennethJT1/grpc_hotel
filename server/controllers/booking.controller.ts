@@ -52,7 +52,7 @@ export const createBookingHandler = async (
           message: "Booking already exists",
         },
         null
-      );/a
+      );
     } else {
       res(
         {

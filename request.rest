@@ -4,9 +4,9 @@ POST http://localhost:8080/api/users/signup HTTP/1.1
 content-type: application/json
 
 {
-    "email": "cut@gmail.com",
+    "email": "Bola@gmail.com",
     "name": "admin",
-    # "role": "ADMIN",
+    "role": "ADMIN",
     "password": "ReactJS",
     "passwordConfirm": "ReactJS"
     
@@ -19,7 +19,7 @@ POST http://localhost:8080/api/users/signin HTTP/1.1
 content-type: application/json
 
 {
-    "email": "cut@gmail.com",
+    "email": "bola@gmail.com",
     "password": "ReactJS"
 }
 
@@ -87,6 +87,36 @@ DELETE http://localhost:8080/api/hotels/ HTTP/1.1
 ### GET ALL HOTEL
 
 GET http://localhost:8080/api/hotels?page=1&limit=20 HTTP/1.1
+
+
+
+##################################HH################################################## BOOKING
+### CREATE BOOKING
+
+POST http://localhost:8080/api/bookings HTTP/1.1
+content-type: application/json
+
+{
+        "room": "tryied this",
+        "roomid": "6b9eb586-a5e6-4ca2-83ea-378d5bd888ab",
+        "userid": "1c8fdca4-a1ef-4e62-9ed8-93fe8efb730d",
+        "fromdate": "10-6-45",
+        "todate": "12-6-45",
+        "totalamount": 6500,
+        "totaldays": 5,
+        "transactionid": "12345"
+}
+
+### SINGLE BOOKING
+
+GET http://localhost:8080/api/bookings/ba10d643-2af8-4374-910e-c078d86cfe95 HTTP/1.1
+
+### CANCEL A BOOKING 
+DELETE http://localhost:8080/api/bookings/ HTTP/1.1
+
+### GET ALL BOOKING
+
+GET http://localhost:8080/api/bookings?page=1&limit=20 HTTP/1.1
 
  
 

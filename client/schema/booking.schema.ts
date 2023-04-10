@@ -29,9 +29,6 @@ export const createBookingSchema = z.object({
     transactionid: z.string({
       required_error: "TransactionId is required",
     }),
-    status: z.string({
-      required_error: "Status is required",
-    }),
   }),
 });
 
