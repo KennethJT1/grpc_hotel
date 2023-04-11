@@ -1,40 +1,38 @@
 import * as grpc from '@grpc/grpc-js';
-import { GetMeInput__Output } from '../../pb/auth/GetMeInput';
 import { UserResponse } from '../../pb/auth/UserResponse';
-import { deserializeUser } from '../middleware/deserializeUser';
+import {
+  deleteUser,
+  findAllUsers,
+  findUniqueUser,
+  findUser,
+  updateUser,
+} from "../services/user.service";
+import { UserRequest__Output } from "../../pb/auth/UserRequest";
+import { User } from ".prisma/client";
+import { GetUsersRequest__Output } from "../../pb/auth/GetUsersRequest";
+import { findUniqueHotel } from '../services/hotel.service';
 
-export const getMeHandler = async (
-  req: grpc.ServerUnaryCall<GetMeInput__Output, UserResponse>,
-  res: grpc.sendUnaryData<UserResponse>
+export const findAllUsersHandler = async (
+  call: grpc.ServerWritableStream<GetUsersRequest__Output, User>
 ) => {
   try {
-    const user = await deserializeUser(req.request.access_token);
-    if (!user) {
-      res({
-        code: grpc.status.NOT_FOUND,
-        message: 'Invalid access token or session expired',
-      });
-      return;
-    }
+    const { page, limit } = call.request;
+    const users = await findAllUsers({
+      page: parseInt(page),
+      limit: parseInt(limit),
+    });
 
-    res(null, {
-      user: {
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      call.write({
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.role!,
-        created_at: {
-          seconds: user.created_at.getTime() / 1000,
-        },
-        updated_at: {
-          seconds: user.updated_at.getTime() / 1000,
-        },
-      },
-    });
-  } catch (err: any) {
-    res({
-      code: grpc.status.INTERNAL,
-      message: err.message,
-    });
+      });
+    }
+    call.end();
+  } catch (error: any) {
+    console.log(error);
   }
 };

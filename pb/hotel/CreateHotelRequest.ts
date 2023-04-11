@@ -3,24 +3,16 @@
 
 export interface CreateHotelRequest {
   'name'?: (string);
-  'maxcount'?: (number);
-  'phonenumber'?: (number);
-  'rentperday'?: (number);
-  'imageurls'?: (string)[];
-  'currentbookings'?: (string)[];
-  'type'?: (string);
+  'price'?: (number);
+  'imageurl'?: (string);
   'description'?: (string);
   'location'?: (string);
 }
 
 export interface CreateHotelRequest__Output {
   'name': (string);
-  'maxcount': (number);
-  'phonenumber': (number);
-  'rentperday': (number);
-  'imageurls': (string)[];
-  'currentbookings': (string)[];
-  'type': (string);
+  'price': (number);
+  'imageurl': (string);
   'description': (string);
   'location': (string);
 }

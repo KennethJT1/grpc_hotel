@@ -6,6 +6,7 @@
   "scripts": {
     "start:server": "ts-node-dev --respawn --transpile-only server/app.ts",
     "start:client": "ts-node-dev --respawn --transpile-only client/app.ts",
+    "dev": "yarn start:server && yarn start:client",
     "db:migrate": "npx prisma migrate dev --name post-entity --create-only --schema ./server/prisma/schema.prisma",
     "db:generate": " npx prisma generate --schema ./server/prisma/schema.prisma",
     "db:push": "npx prisma db push --schema ./server/prisma/schema.prisma"
@@ -18,6 +19,7 @@
     "@types/google-protobuf": "^3.15.6",
     "@types/jsonwebtoken": "^9.0.1",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "google-protobuf": "^3.21.2",
@@ -26,6 +28,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/morgan": "^1.9.4",
     "morgan": "^1.10.0",

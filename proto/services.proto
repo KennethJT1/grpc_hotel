@@ -8,31 +8,26 @@ import "rpc_signin_user.proto";
 
 import "hotel.proto";
 import "rpc_create_hotel.proto";
-import "rpc_update_hotel.proto";
 
 //User service
 service AuthService {
-  rpc SignUpUser(SignUpUserInput) returns (SignUpUserResponse) {}
-  rpc SignInUser(SignInUserInput) returns (SignInUserResponse) {}
-  rpc RefreshToken(RefreshTokenInput) returns (RefreshTokenResponse) {}
-  rpc GetMe(GetMeInput) returns (UserResponse) {}
+  rpc SignUpUser(SignUpUserInput) returns (SignUserResponse) {}
+  rpc SignInUser(SignInUserInput) returns (SignUserResponse) {}
+  rpc GetUsers(GetUsersRequest) returns (stream User) {}
 }
 
-message GetMeInput { string access_token = 1; }
-message RefreshTokenInput { string refresh_token = 1; }
-message RefreshTokenResponse {
-  string access_token = 1;
-  string refresh_token = 2;
+message GetUsersRequest {
+  int64 page = 1;
+  int64 limit = 2;
 }
+
+message UserRequest { string id = 1; }
 
 // Hotel Service
 service HotelService {
-  rpc DeleteHotel(HotelRequest) returns (DeleteHotelResponse) {}
   rpc GetHotel(HotelRequest) returns (HotelResponse) {}
   rpc GetHotels(GetHotelsRequest) returns (stream Hotel) {}
   rpc CreateHotel(CreateHotelRequest) returns (HotelResponse) {}
-  rpc UpdateHotel(UpdateHotelRequest) returns (HotelResponse) {}
-  rpc FindHotelsByLocation(FindHotelsByLocationRequest) returns (stream Hotel) {}
 }
 
 message GetHotelsRequest {
@@ -41,11 +36,3 @@ message GetHotelsRequest {
 }
 
 message HotelRequest { string id = 1; }
-
-message DeleteHotelResponse { bool success = 1; }
-
-message FindHotelsByLocationRequest {
-  int64 page = 1;
-  int64 limit = 2;
-  string location = 3;
-}

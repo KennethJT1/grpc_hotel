@@ -9,7 +9,6 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 export interface ProtoGrpcType {
   auth: {
     SignInUserInput: MessageTypeDefinition
-    SignInUserResponse: MessageTypeDefinition
   }
 }
 

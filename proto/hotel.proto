@@ -7,16 +7,12 @@ import "google/protobuf/timestamp.proto";
 message Hotel {
   string id = 1;
   string name = 2;
-  int32 maxcount = 3;
-  int32 phonenumber = 4;
-  int32 rentperday = 5;
-  repeated string imageurls = 6;
-  repeated string currentbookings = 7;
-  string type = 8;
-  string description = 9;
-  string location = 10;
-  google.protobuf.Timestamp created_at = 11;
-  google.protobuf.Timestamp updated_at = 12;
+  int32 price = 3;
+  string imageurl = 4;
+  string description = 5;
+  string location = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
 }
 
 message HotelResponse { Hotel hotel = 1; }

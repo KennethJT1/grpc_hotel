@@ -8,7 +8,6 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 
 export interface ProtoGrpcType {
   auth: {
-    GenericResponse: MessageTypeDefinition
     Role: EnumTypeDefinition
     User: MessageTypeDefinition
     UserResponse: MessageTypeDefinition

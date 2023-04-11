@@ -11,21 +11,16 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 export interface ProtoGrpcType {
   auth: {
     AuthService: SubtypeConstructor<typeof grpc.Client, _auth_AuthServiceClient> & { service: _auth_AuthServiceDefinition }
-    DeleteHotelResponse: MessageTypeDefinition
-    FindHotelsByLocationRequest: MessageTypeDefinition
-    GenericResponse: MessageTypeDefinition
     GetHotelsRequest: MessageTypeDefinition
-    GetMeInput: MessageTypeDefinition
+    GetUsersRequest: MessageTypeDefinition
     HotelRequest: MessageTypeDefinition
     HotelService: SubtypeConstructor<typeof grpc.Client, _auth_HotelServiceClient> & { service: _auth_HotelServiceDefinition }
-    RefreshTokenInput: MessageTypeDefinition
-    RefreshTokenResponse: MessageTypeDefinition
     Role: EnumTypeDefinition
     SignInUserInput: MessageTypeDefinition
-    SignInUserResponse: MessageTypeDefinition
     SignUpUserInput: MessageTypeDefinition
-    SignUpUserResponse: MessageTypeDefinition
+    SignUserResponse: MessageTypeDefinition
     User: MessageTypeDefinition
+    UserRequest: MessageTypeDefinition
     UserResponse: MessageTypeDefinition
   }
   google: {
@@ -37,7 +32,6 @@ export interface ProtoGrpcType {
     CreateHotelRequest: MessageTypeDefinition
     Hotel: MessageTypeDefinition
     HotelResponse: MessageTypeDefinition
-    UpdateHotelRequest: MessageTypeDefinition
   }
 }
 

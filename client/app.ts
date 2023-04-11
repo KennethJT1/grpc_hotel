@@ -3,22 +3,16 @@ import customConfig from '../server/config/default';
 import { proto } from "./client";
 import express, { Request, Response } from "express"
 import morgan from 'morgan';
-import validate from './middleware/validate';
+import cors from "cors";
+import validate from "./middleware/validate";
 import {
   SigninInput,
   SignupInput,
   signinSchema,
   signupSchema,
 } from "./schema/user.schema";
-import { Hotel } from "@prisma/client";
-import {
-  CreateHotelInput,
-  DeleteHotelInput,
-  GetHotelInput,
-  UpdateHotelInput,
-  createHotelSchema,
-  updateHotelSchema,
-} from "./schema/hotel.schema";
+import { Hotel, User } from "@prisma/client";
+import { CreateHotelInput, GetHotelInput } from "./schema/hotel.schema";
 
 //USER
 const client = new proto.auth.AuthService(
@@ -62,19 +56,24 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-/* ========================================= USER ROUTES=================================================== */
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
+
 //signup
 app.post(
   "/api/users/signup",
   validate(signupSchema),
   async (req: Request<{}, {}, SignupInput>, res: Response) => {
-    const { name, email, password, passwordConfirm } = req.body;
+    const { name, email, password } = req.body;
     client.SignUpUser(
       {
         name,
         email,
         password,
-        passwordConfirm,
       },
       (err, data) => {
         if (err) {
@@ -85,7 +84,7 @@ app.post(
         }
         return res.status(201).json({
           status: "success",
-          user: data,
+          data,
         });
       }
     );
@@ -119,32 +118,45 @@ app.post(
   }
 );
 
-/* ========================================= Hotel ROUTES=================================================== */
-//cretae hotel
+//Get all users
+app.get("/api/users", async (req: Request, res: Response) => {
+  const limit = parseInt(req.query.limit as string) || 10;
+  const page = parseInt(req.query.page as string) || 1;
+  const users: User[] = [];
+
+  const stream = client.GetUsers({ page, limit });
+  stream.on("data", (data: User) => {
+    users.push(data);
+  });
+
+  stream.on("end", () => {
+    console.log("🙌 Communication ended");
+    res.status(200).json({
+      status: "success",
+      results: users.length,
+      users,
+    });
+  });
+
+  stream.on("error", (err) => {
+    res.status(500).json({
+      status: "error",
+      message: err.message,
+    });
+  });
+});
+
+//create hotel
 app.post(
   "/api/hotels",
-  validate(createHotelSchema),
+  // validate(createHotelSchema),
   async (req: Request<{}, {}, CreateHotelInput>, res: Response) => {
-    const {
-      name,
-      maxcount,
-      phonenumber,
-      rentperday,
-      imageurls,
-      currentbookings,
-      type,
-      description,
-      location,
-    } = req.body;
+    const { name, price, imageurl, description, location } = req.body;
     client_hotel.CreateHotel(
       {
         name,
-        maxcount,
-        phonenumber,
-        rentperday,
-        imageurls,
-        currentbookings,
-        type,
+        price,
+        imageurl,
         description,
         location,
       },
@@ -156,54 +168,6 @@ app.post(
           });
         }
         return res.status(201).json({
-          status: "success",
-          hotel: data,
-        });
-      }
-    );
-  }
-);
-
-//update hotel
-app.patch(
-  "/api/hotels/:hotelId",
-  validate(updateHotelSchema),
-  async (
-    req: Request<UpdateHotelInput["params"], {}, UpdateHotelInput["body"]>,
-    res: Response
-  ) => {
-    const {
-      name,
-      maxcount,
-      phonenumber,
-      rentperday,
-      imageurls,
-      currentbookings,
-      type,
-      description,
-      location,
-    } = req.body;
-    client_hotel.UpdateHotel(
-      {
-        id: req.params.hotelId,
-        name,
-        maxcount,
-        phonenumber,
-        rentperday,
-        imageurls,
-        currentbookings,
-        type,
-        description,
-        location,
-      },
-      (err, data) => {
-        if (err) {
-          return res.status(400).json({
-            status: "fail",
-            message: err.message,
-          });
-        }
-        return res.status(200).json({
           status: "success",
           hotel: data,
         });
@@ -230,30 +194,6 @@ app.get(
         return res.status(200).json({
           status: "success",
           data,
-        });
-      }
-    );
-  }
-);
-
-//delete an hotel
-app.delete(
-  "/api/hotels/:hotelId",
-  async (req: Request<DeleteHotelInput>, res: Response) => {
-    client_hotel.DeleteHotel(
-      {
-        id: req.params.hotelId,
-      },
-      (err, data) => {
-        if (err) {
-          return res.status(400).json({
-            status: "fail",
-            message: err.message,
-          });
-        }
-        return res.status(204).json({
-          status: "success",
-          data: null,
         });
       }
     );
@@ -288,37 +228,7 @@ app.get("/api/hotels", async (req: Request, res: Response) => {
   });
 });
 
-//Get all hotels by location
-app.get("/api/hotels_location", async (req: Request, res: Response) => {
-  const location = req.query.location as string;
-  const limit = parseInt(req.query.limit as string) || 10;
-  const page = parseInt(req.query.page as string) || 1;
-  const hotels: Hotel[] = [];
-
-  const stream = client_hotel.FindHotelsByLocation({ page, limit, location });
-  stream.on("data", (data: Hotel) => {
-    hotels.push(data);
-  });
-
-  stream.on("end", () => {
-    console.log("🙌 Communication ended");
-    res.status(200).json({
-      status: "success",
-      results: hotels.length,
-      hotels,
-    });
-  });
-
-  stream.on("error", (err) => {
-    res.status(500).json({
-      status: "error",
-      message: err.message,
-    });
-  });
-});
-
-
-const port = 8080
+const port = customConfig.CLIENT_PORT;
 app.listen(port, ()=>{
   console.log("🚀 Express client started successfully on port: "+ port)
 })

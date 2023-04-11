@@ -3,21 +3,14 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import { ProtoGrpcType } from '../pb/services';
 import { AuthServiceHandlers } from '../pb/auth/AuthService';
+import { loginHandler, registerHandler } from "./controllers/auth.controller";
+import customConfig from "./config/default";
+import connectDB from "./database/prisma";
+import { findAllUsersHandler } from "./controllers/user.controller";
 import {
-  loginHandler,
-  refreshAccessTokenHandler,
-  registerHandler,
-} from './controllers/auth.controller';
-import customConfig from './config/default';
-import connectDB from './database/prisma';
-import { getMeHandler } from './controllers/user.controller';
-import {
-  UpdateHotelHandler,
   createHotelHandler,
-  deleteHotelHandler,
   findAllHotelsHandler,
   findHotelHandler,
-  findHotelsByLocationHandler,
 } from "./controllers/hotel.controller";
 import { HotelServiceHandlers } from "../pb/auth/HotelService";
 
@@ -48,18 +41,14 @@ const server = new grpc.Server();
 server.addService(authPackage.AuthService.service, {
   SignUpUser: (req, res) => registerHandler(req, res),
   SignInUser: (req, res) => loginHandler(req, res),
-  RefreshToken: (req, res) => refreshAccessTokenHandler(req, res),
-  GetMe: (req, res) => getMeHandler(req, res),
+  GetUsers: (call) => findAllUsersHandler(call),
 } as AuthServiceHandlers);
 
 //Hotel service
 server.addService(authPackage.HotelService.service, {
   CreateHotel: (req, res) => createHotelHandler(req, res),
-  UpdateHotel: (req, res) => UpdateHotelHandler(req, res),
-  DeleteHotel: (req, res) => deleteHotelHandler(req, res),
   GetHotel: (req, res) => findHotelHandler(req, res),
   GetHotels: (call) => findAllHotelsHandler(call),
-  FindHotelsByLocation: (call) => findHotelsByLocationHandler(call),
 } as HotelServiceHandlers);
 
 

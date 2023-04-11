@@ -21,13 +21,9 @@ model User {
 
 model Hotel {
   id               String  @id @default(uuid())
-  name             String  @unique
-  maxcount         Int     
-  phonenumber      Int
-  rentperday       Int
-  imageurls        String[]
-  currentbookings  String[]
-  type             String
+  name             String  @unique 
+  price            Int
+  imageurl         String
   description      String
   location         String
   createdAt        DateTime @default(now())

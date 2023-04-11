@@ -2,10 +2,12 @@
 
 import type { User as _auth_User, User__Output as _auth_User__Output } from '../auth/User';
 
-export interface SignUpUserResponse {
+export interface SignUserResponse {
   'user'?: (_auth_User | null);
+  'token'?: (string);
 }
 
-export interface SignUpUserResponse__Output {
+export interface SignUserResponse__Output {
   'user': (_auth_User__Output | null);
+  'token': (string);
 }

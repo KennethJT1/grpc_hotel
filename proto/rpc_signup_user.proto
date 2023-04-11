@@ -8,8 +8,10 @@ message SignUpUserInput {
   string name = 1;
   string email = 2;
   string password = 3;
-  string passwordConfirm = 4;
-  string role = 5;
+  string role = 4;
 }
 
-message SignUpUserResponse { User user = 1; }
+message SignUserResponse { 
+  User user = 1;
+  string token = 2;
+}

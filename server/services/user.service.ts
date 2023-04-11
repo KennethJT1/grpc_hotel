@@ -1,8 +1,5 @@
 import { Prisma, User } from '@prisma/client';
-import customConfig from '../config/default';
-import redisClient from '../utils/connectRedis';
-import { signJwt } from '../utils/jwt';
-import { prisma } from '../database/prisma';
+import { prisma } from "../database/prisma";
 
 export const createUser = async (input: Prisma.UserCreateInput) => {
   return (await prisma.user.create({
@@ -30,28 +27,20 @@ export const findUniqueUser = async (
   })) as User;
 };
 
-export const updateUser = async (
-  where: Partial<Prisma.UserWhereUniqueInput>,
-  data: Prisma.UserUpdateInput,
-  select?: Prisma.UserSelect
-) => {
-  return (await prisma.user.update({ where, data, select })) as User;
-};
-
-export const signTokens = async (user: Prisma.UserCreateInput) => {
-  // 1. Create Session
-  redisClient.set(`${user.id}`, JSON.stringify(user), {
-    EX: customConfig.redisCacheExpiresIn * 60,
-  });
-
-  // 2. Create Access and Refresh tokens
-  const access_token = signJwt({ sub: user.id }, "accessTokenPrivateKey", {
-    expiresIn: `${customConfig.accessTokenExpiresIn}d`,
-  });
-
-  const refresh_token = signJwt({ sub: user.id }, "refreshTokenPrivateKey", {
-    expiresIn: `${customConfig.refreshTokenExpiresIn}d`,
-  });
-
-  return { access_token, refresh_token };
+export const findAllUsers = async ({
+  page,
+  limit,
+  select,
+}: {
+  page: number;
+  limit: number;
+  select?: Prisma.UserSelect;
+}) => {
+  const take = limit || 10;
+  const skip = (page - 1) * limit;
+  return (await prisma.user.findMany({
+    select,
+    skip,
+    take,
+  })) as User[];
 };
