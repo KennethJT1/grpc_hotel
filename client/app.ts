@@ -1,8 +1,8 @@
-import * as grpc from '@grpc/grpc-js';
-import customConfig from '../server/config/default';
+import * as grpc from "@grpc/grpc-js";
+import customConfig from "../server/config/default";
 import { proto } from "./client";
-import express, { Request, Response } from "express"
-import morgan from 'morgan';
+import express, { Request, Response } from "express";
+import morgan from "morgan";
 import cors from "cors";
 import validate from "./middleware/validate";
 import {
@@ -20,15 +20,14 @@ const client = new proto.auth.AuthService(
   grpc.credentials.createInsecure()
 );
 const deadline = new Date();
-deadline.setSeconds(deadline.getSeconds() + 1);
+deadline.setSeconds(deadline.getSeconds() + 5);
 client.waitForReady(deadline, (err: any) => {
   if (err) {
     console.error(err);
     return;
   }
-  setTimeout(() => {
-    onClientReady();
-  }, 10000);
+
+  onClientReady();
 });
 
 function onClientReady() {
@@ -41,15 +40,14 @@ const client_hotel = new proto.auth.HotelService(
   grpc.credentials.createInsecure()
 );
 const deadline_hotel = new Date();
-deadline_hotel.setSeconds(deadline_hotel.getSeconds() + 1);
+deadline_hotel.setSeconds(deadline_hotel.getSeconds() + 5);
 client_hotel.waitForReady(deadline_hotel, (err: any) => {
   if (err) {
     console.error(err);
     return;
   }
-  setTimeout(() => {
-    onClientReadyHotel();
-  }, 10000);
+
+  onClientReadyHotel();
 });
 
 function onClientReadyHotel() {
@@ -234,8 +232,6 @@ app.get("/api/hotels", async (req: Request, res: Response) => {
 
 const port = customConfig.CLIENT_PORT;
 
-setTimeout(() => {
-  app.listen(port, () => {
-    console.log("🚀 Express client started successfully on port: " + port);
-  });
-}, 10000);
+app.listen(port, () => {
+  console.log("🚀 Express client started successfully on port: " + port);
+});
