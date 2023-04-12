@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start:server": "ts-node-dev --respawn --transpile-only server/app.ts",
-    "start:client": "ts-node-dev --respawn --transpile-only client/app.ts",
-    "dev": "yarn start:server && yarn start:client",
+    "start": "concurrently \"yarn start:server\" \"yarn start:client\"",
+    "start:server": "ts-node server/app.ts",
+    "start:client": "ts-node client/app.ts",
     "db:migrate": "npx prisma migrate dev --name post-entity --create-only --schema ./server/prisma/schema.prisma",
     "db:generate": " npx prisma generate --schema ./server/prisma/schema.prisma",
     "db:push": "npx prisma db push --schema ./server/prisma/schema.prisma"
@@ -31,6 +31,7 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/morgan": "^1.9.4",
+    "concurrently": "^8.0.1",
     "morgan": "^1.10.0",
     "prisma": "^4.12.0",
     "ts-node-dev": "^2.0.0",

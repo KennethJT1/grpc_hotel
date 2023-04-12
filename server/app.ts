@@ -60,8 +60,8 @@ server.bindAsync(
       console.error(err);
       return;
     }
-    server.start();
     connectDB();
+    server.start();
     console.log(`🚀 Server listening on ${port}`);
   }
 );

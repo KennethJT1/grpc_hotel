@@ -1,16 +1,7 @@
-import * as grpc from '@grpc/grpc-js';
-import { UserResponse } from '../../pb/auth/UserResponse';
-import {
-  deleteUser,
-  findAllUsers,
-  findUniqueUser,
-  findUser,
-  updateUser,
-} from "../services/user.service";
-import { UserRequest__Output } from "../../pb/auth/UserRequest";
-import { User } from ".prisma/client";
+import * as grpc from "@grpc/grpc-js";
+import { findAllUsers } from "../services/user.service";
 import { GetUsersRequest__Output } from "../../pb/auth/GetUsersRequest";
-import { findUniqueHotel } from '../services/hotel.service';
+import { User } from "../../pb/auth/User";
 
 export const findAllUsersHandler = async (
   call: grpc.ServerWritableStream<GetUsersRequest__Output, User>

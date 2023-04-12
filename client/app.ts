@@ -26,7 +26,9 @@ client.waitForReady(deadline, (err: any) => {
     console.error(err);
     return;
   }
-  onClientReady();
+  setTimeout(() => {
+    onClientReady();
+  }, 10000);
 });
 
 function onClientReady() {
@@ -45,7 +47,9 @@ client_hotel.waitForReady(deadline_hotel, (err: any) => {
     console.error(err);
     return;
   }
-  onClientReadyHotel();
+  setTimeout(() => {
+    onClientReadyHotel();
+  }, 10000);
 });
 
 function onClientReadyHotel() {
@@ -229,6 +233,9 @@ app.get("/api/hotels", async (req: Request, res: Response) => {
 });
 
 const port = customConfig.CLIENT_PORT;
-app.listen(port, ()=>{
-  console.log("🚀 Express client started successfully on port: "+ port)
-})
+
+setTimeout(() => {
+  app.listen(port, () => {
+    console.log("🚀 Express client started successfully on port: " + port);
+  });
+}, 10000);
